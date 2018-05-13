@@ -21,4 +21,6 @@ yarn-debug.log*
 yarn-error.log*
 DS_Store
 *.pyc
-/node_modules
+
+server/node_modules/
+client/node_modules/
