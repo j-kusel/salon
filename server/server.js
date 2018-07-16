@@ -40,7 +40,7 @@ $db
 
                 var token = jwt.sign(profile, 'hunkydory');
 
-                res.json({token: token, editor: profile.text_index});
+                res.json({token: token, editor: draft._id});
             });
         });
     })
@@ -60,7 +60,20 @@ $db
 
         io.sockets
             .on('connection', (socket) => {
-                console.log(socket.handshake, 'connected');
+                const Draft = mongoose.model('Draft');
+                Draft.find({}).select('BODY')
+                    .then((drafts) => {
+                        socket.emit('update', drafts);
+                    });
+                socket.on('save', (data) => {
+                    const Draft = mongoose.model('Draft');
+                    Draft.findByIdAndUpdate(data._id, { $set: { BODY: data.BODY }}, { new: false }, (err, draft) => {
+                        var save_msg = err ? 'save failed: ' + err : 'successfully saved';
+                        socket.emit('save_status', save_msg); 
+                        Draft.find({}).select('BODY')
+                            .then((drafts) => socket.broadcast.emit('update', drafts));
+                    });
+                });
             });
     });
 
