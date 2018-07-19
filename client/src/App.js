@@ -13,14 +13,14 @@ class App extends Component {
     this.state = {
         hash: window.location.pathname,
         editable: -1,
-        token: ''
+        token: '',
+        posts: []
     }
 
     this.connectSocket = this.connectSocket.bind(this);
 
     axios.get('http://localhost:8500' + this.state.hash)
         .then((res) => {
-            console.log(res);
             this.connectSocket(res);
         })
         .catch((err) => {
@@ -36,24 +36,35 @@ class App extends Component {
       this.setState((oldState) => (
           { 
               token: result.data.token,
-              editable: parseInt(result.data.editor)
+              editable: result.data.editor
           }
       ));
 
+      var self = this;
+
       this.socket
-          .on('connect', () => console.log('authenticated'))
-          .on('disconnect', () => console.log('disconnected'));
+          .on('connect', () => {
+              console.log('authenticated'); 
+          })
+          .on('disconnect', () => console.log('disconnected'))
+          .on('update', (posts) => self.setState((oldState) => ({posts: posts})))
+          .on('save_status', (status) => console.log(status));
+
+      this.saver = (_id, BODY) => this.socket.emit('save', {_id, BODY});
 
   }
 
   render() {
 
-    var editors = (new Array(10)).fill(0).map((x, index) => <TextEdit className="col-sm-3" key={index} readOnly={index !== this.state.editable} />)
+    var editors = (this.state.posts || (new Array(10)).fill(0))
+        .map((post, index) => {
+            var id = post ? post._id : index;
+            return (<TextEdit className="col-sm-3" key={id} id={id} save={this.saver} body={post.BODY} readOnly={id !== this.state.editable} />);
+        });
 
     return (
       <div className="App" id='app'>
-        {editors}
-        
+        {editors} 
       </div>
     );
   }
