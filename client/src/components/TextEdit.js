@@ -24,18 +24,15 @@ class TextEdit extends Component {
 
     onChange(editorState) {
         clearTimeout(this.state.saveTimer);
-        var current = this.state.editorState.getCurrentContent().getPlainText();
+        var current = editorState.getCurrentContent().getPlainText();
+        var theTimer = null;
+        if (current !== this.state.editorState.getCurrentContent().getPlainText()) {
+            theTimer = setTimeout(() => this.props.save(this.props.id, current), 2000);
+        }
         this.setState({
             editorState: editorState,
-            saveTimer: setTimeout(() => this.props.save(this.props.id, current), 2000)
+            saveTimer: theTimer
         });
-        
-        /*if (current === 'logout') {
-            this.socket.emit('logout', this.state.userdata);
-        } else {
-            this.socket.emit('update', current);
-        }
-        */
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -43,7 +40,6 @@ class TextEdit extends Component {
     }
 
     render() {
-        console.log(this.props.readOnly);
         return (
             <div className='editor-container col-xs-3'>
                 <Editor 

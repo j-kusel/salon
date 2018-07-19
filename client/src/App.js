@@ -21,7 +21,6 @@ class App extends Component {
 
     axios.get('http://localhost:8500' + this.state.hash)
         .then((res) => {
-            console.log(res);
             this.connectSocket(res);
         })
         .catch((err) => {
@@ -59,9 +58,7 @@ class App extends Component {
 
     var editors = (this.state.posts || (new Array(10)).fill(0))
         .map((post, index) => {
-            console.log(post);
             var id = post ? post._id : index;
-            console.log(id);
             return (<TextEdit className="col-sm-3" key={id} id={id} save={this.saver} body={post.BODY} readOnly={id !== this.state.editable} />);
         });
 
