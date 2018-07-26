@@ -1,8 +1,16 @@
+/*  Importing React allows JSX to work.
+    Importing { Component } shortens React.Component syntax to Component.
+    Using Component, we can define functions/classes with special features like
+    statefulness. */
 import React, { Component } from 'react';
-import TextEdit from './components/TextEdit.js';
+/*  Import front-end framework tools for React. */
 import { Grid, Row, Col } from 'react-bootstrap';
+/*  Import HTTP client axios */
 import axios from 'axios';
+/*  Import for real-time data transfer */
 import io from 'socket.io-client';
+
+import TextEdit from './components/TextEdit.js';
 import './css/index.css';
 
 
@@ -27,14 +35,14 @@ class App extends Component {
             console.log(err);
         });
   }
-    
+
   connectSocket(result) {
       this.socket = io('localhost:8500', {
           query: 'token=' + result.data.token
       });
 
       this.setState((oldState) => (
-          { 
+          {
               token: result.data.token,
               editable: result.data.editor
           }
@@ -44,7 +52,7 @@ class App extends Component {
 
       this.socket
           .on('connect', () => {
-              console.log('authenticated'); 
+              console.log('authenticated');
           })
           .on('disconnect', () => console.log('disconnected'))
           .on('update', (posts) => self.setState((oldState) => ({posts: posts})))
@@ -64,7 +72,7 @@ class App extends Component {
 
     return (
       <div className="App" id='app'>
-        {editors} 
+        {editors}
       </div>
     );
   }
