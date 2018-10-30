@@ -12,11 +12,12 @@ $db
     })
     .then((drafts) => {
         drafts.forEach((draft, index) => {
-            console.log(draft);
-            axios.post('http://localhost:8500/posts/', {
+            axios.post('http://localhost:8500/api/posts/', {
                 title: draft.TITLE,
-                author: 0,
+                author: 1,
                 body: draft.BODY
-            });
+            })
+            .then(res => console.log(res));
         });
-    });
+    })
+    .catch(err => console.log(err));
