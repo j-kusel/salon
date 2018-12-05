@@ -23,10 +23,13 @@ class TextEdit extends Component {
 
 
     onChange(editorState) {
-        clearTimeout(this.state.saveTimer);
         var current = editorState.getCurrentContent().getPlainText();
         var theTimer = null;
+
+        // COMPARE CURRENT TEXT WITH PREVIOUS CHANGE
         if (current !== this.state.editorState.getCurrentContent().getPlainText()) {
+            // RESET THE SAVE TIMER
+            if (this.state.saveTimer) clearTimeout(this.state.saveTimer);
             theTimer = setTimeout(() => this.props.save(this.props.id, current), 2000);
         }
         this.setState({
