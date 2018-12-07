@@ -3,5 +3,10 @@
   border: 1px solid pink;
   height: 300px; }
 
+.hashtags {
+  background-color: #008080;
+  border: 1px solid pink;
+  height: 300px; }
+
 body {
   background-color: pink; }
