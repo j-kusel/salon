@@ -10,6 +10,8 @@ import axios from 'axios';
 /*  Import for real-time data transfer */
 import io from 'socket.io-client';
 
+import parseTags from './util/parseTags';
+
 import TextEdit from './components/TextEdit.js';
 import './css/index.css';
 
@@ -54,7 +56,13 @@ class App extends Component {
               console.log('authenticated');
           })
           .on('disconnect', () => console.log('disconnected'))
-          .on('update', (posts) => this.setState((oldState) => ({posts: posts})))
+          .on('update', (posts) => {
+              console.log('updated.');
+              var tags = {}
+              posts.forEach((post) => tags[post._id] = parseTags(post.BODY));
+              console.log(tags);
+              this.setState((oldState) => ({posts: posts, tags: tags}));
+          })
           .on('save_status', (status) => console.log(status));
 
       this.saver = (_id, BODY) => this.socket.emit('save', {_id, BODY});
