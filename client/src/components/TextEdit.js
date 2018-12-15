@@ -5,6 +5,7 @@ import 'draft-js/dist/Draft.css';
 import io from 'socket.io-client';
 import axios from 'axios';
 import parseTags from '../util/parseTags';
+import styled from 'styled-components';
 
 
 class TextEdit extends Component {
@@ -60,16 +61,20 @@ class TextEdit extends Component {
     } 
 
     render() {
-        
+
+        var read = this.props.readOnly;
+        const EditorContainer = styled.div`
+            height: ${read ? '50vh' : '100vh'}
+        `;
         return (
-            <div className='editor-container col-xs-3'>
+            <EditorContainer className={(read ? 'col-sm-6':'col-sm-12') + " editor-container"}>
                 <Editor 
                     className='editor'
                     editorState={this.state.editorState} 
                     onChange={this.onChange}
                     readOnly={this.props.readOnly}
                 />
-            </div>
+            </EditorContainer>
         );
     }
 }

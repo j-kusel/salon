@@ -1,7 +1,22 @@
 .editor-container {
   background-color: #008080;
-  border: 1px solid pink;
-  height: 300px; }
+  border: 1px solid pink; }
+
+.editors {
+  margin: 0px;
+  padding: 0px; }
+
+.hashtags {
+  height: 100vh !important;
+  margin: 0px; }
+
+.viewport {
+  width: 100%;
+  margin: 0px;
+  padding: 0px; }
+
+.essay {
+  padding: 0px; }
 
 .hashtags {
   background-color: #008080;

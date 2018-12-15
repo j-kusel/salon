@@ -77,11 +77,16 @@ class App extends Component {
 
   render() {
 
+    var essay;
     var editors = (this.state.posts || (new Array(10)).fill(0))
         .map((post, index) => {
             var id = post ? post._id : index;
-            return (<TextEdit className="col-sm-3" key={id} id={id} save={this.saver} tagger={this.tagger} body={post.BODY} readOnly={id !== this.state.editable} />);
+            if (this.state.editable !== id) return (<TextEdit className="col-sm-6" key={id} id={id} save={this.saver} tagger={this.tagger} body={post.BODY} readOnly={true} />);
+            essay = <TextEdit key={id} id={id} save={this.saver} tagger={this.tagger} body={post.BODY} readOnly={false} />
         });
+
+    var editorHalves = [[], []];
+    editors.forEach((editor, index) => editorHalves[index % 2].push(editor));
 
     var tags = Object.keys(this.state.tags)
         .map(key => this.state.tags[key])
@@ -93,10 +98,26 @@ class App extends Component {
 
     return (
       <div className="App" id='app'>
-        {editors}
-        <div className="hashtags col-sm-6">
-            {tags}
-        </div> 
+        <Grid className="viewport"> 
+            <Row>
+                <Grid className="editors col-sm-4">
+                    {editorHalves[0]}
+                    {/*<div className="col-sm-6">hi</div>
+                    <div className="col-sm-6">hi</div>
+                    <div className="col-sm-6">hi</div>
+                    <div className="col-sm-6">hi</div>
+                    */}
+                </Grid>
+                {essay ? <div className="essay col-sm-4">{essay}</div> : null}
+                <Grid className="editors col-sm-4">
+                    {editorHalves[1]}
+                </Grid>
+                {/*<div className="hashtags col-sm-3">
+                    {tags}
+                </div>*/} 
+            </Row>
+        </Grid>
+
       </div>
     );
   }
